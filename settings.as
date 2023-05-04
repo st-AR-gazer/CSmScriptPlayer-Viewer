@@ -31,5 +31,5 @@ vec4 Setting_General_FillColor = vec4(0, 0, 0, 0.7);
 [Setting category="General" name="Marker color" color]
 vec4 Setting_General_MarkerColor = vec4(1, 0, 0, 1);
 
-[Setting category="General" name="Marker color" color]
+[Setting category="General" name="Text color" color]
 vec4 Setting_General_TextColor = vec4(255, 255, 255, 1);
