@@ -20,16 +20,17 @@ void AimPitch() {
     vec2 screenSize = vec2(Draw::GetWidth(), Draw::GetHeight());
     vec2 origin = posPitch * (screenSize - sizePitch);
 
-    float border_radius = 2.0;
-    nvg::BeginPath();
 
     vec2 center = vec2(origin.x + sizePitch.x / 2.0, origin.y + sizePitch.y / 2.0);
     float radius = sizePitch.x / 2.0;
 
     // Draw the circle
+    nvg::BeginPath();
     nvg::Circle(center, radius);
     nvg::StrokeColor(Setting_General_BorderColor);
     nvg::StrokeWidth(2.0);
+    nvg::FillColor(Setting_General_FillColor);
+    nvg::Fill();
     nvg::Stroke();
 
     // Draw the tick marks
@@ -55,17 +56,29 @@ void AimPitch() {
     }
 
     // Draw the dial value
-    if (script !is null) {
-        aimPitch = script.AimPitch;
+    if (Setting_General_EnableOldSettings) {
+        if (script !is null) {
+            aimPitch = script.AimPitch;
+        }
+        float valueAngle = (aimPitch - -3.14) / (3.14 - -3.14) * (tickEnd - tickStart) + tickStart;
+        vec2 valuePos = center + 0.6 * radius * vec2(Math::Cos(valueAngle), Math::Sin(valueAngle));
+        
+        nvg::BeginPath();
+        nvg::Circle(valuePos, tickLength * 0.7);
+        nvg::FillColor(Setting_General_FillColor);
+        nvg::Fill();
+        nvg::ClosePath();
+    } else {
+        float valueAngle = (aimPitch - -3.14) / (3.14 - -3.14) * (tickEnd - tickStart) + tickStart;
+        vec2 valuePos = center + radius * vec2(Math::Cos(valueAngle), Math::Sin(valueAngle));
+        nvg::BeginPath();
+        nvg::MoveTo(center);
+        nvg::LineTo(valuePos);
+        nvg::StrokeColor(Setting_General_MarkerColor);
+        nvg::StrokeWidth(2.0);
+        nvg::Stroke();
+        nvg::ClosePath();
     }
-    float valueAngle = (aimPitch - -3.14) / (3.14 - -3.14) * (tickEnd - tickStart) + tickStart;
-    vec2 valuePos = center + 0.6 * radius * vec2(Math::Cos(valueAngle), Math::Sin(valueAngle));
-    
-    nvg::BeginPath();
-    nvg::Circle(valuePos, tickLength * 0.7);
-    nvg::FillColor(Setting_General_FillColor);
-    nvg::Fill();
-    nvg::ClosePath();
 
 
     // Draw "Pitch" in the center
