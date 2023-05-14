@@ -24,16 +24,16 @@ void AimYaw() {
     vec2 screenSize = vec2(Draw::GetWidth(), Draw::GetHeight());
     vec2 origin = posYaw * (screenSize - sizeYaw);
 
-    float border_radius = 2.0;
-    nvg::BeginPath();
-
     vec2 center = vec2(origin.x + sizeYaw.x / 2.0, origin.y + sizeYaw.y / 2.0);
     float radius = sizeYaw.x / 2.0;
 
     // Draw the circle
+    nvg::BeginPath();
     nvg::Circle(center, radius);
     nvg::StrokeColor(Setting_General_BorderColor);
     nvg::StrokeWidth(2.0);
+    nvg::FillColor(Setting_General_FillColor);
+    nvg::Fill();
     nvg::Stroke();
 
     // Draw the tick marks
@@ -43,8 +43,6 @@ void AimYaw() {
     float tickEnd = 3.14159265359 * 0.5;
     float tickIncrement = (tickEnd - tickStart) / (numTicks - 1);
     float tickAngle = tickStart;
-
-    
 
     for (int i = 0; i < numTicks; i++) {
         vec2 tickStartPos = center + vec2(radius * Math::Cos(tickAngle), radius * Math::Sin(tickAngle));
@@ -59,7 +57,8 @@ void AimYaw() {
     }
 
     // Draw the dial value
-    if (script !is null) {
+    if (Setting_General_EnableOldSettings) {
+        if (script !is null) {
         aimYaw = script.AimYaw;
     }
     float valueAngle = (aimYaw - -3.14) / (3.14 - -3.14) * (tickEnd - tickStart) + tickStart;
@@ -70,7 +69,18 @@ void AimYaw() {
     nvg::FillColor(Setting_General_FillColor);
     nvg::Fill();
     nvg::ClosePath();
-
+    } else {
+        float valueAngle = (aimYaw - -3.14) / (3.14 - -3.14) * (tickEnd - tickStart) + tickStart;
+        vec2 valuePos = center + radius * vec2(Math::Cos(valueAngle), Math::Sin(valueAngle));
+        nvg::BeginPath();
+        nvg::MoveTo(center);
+        nvg::LineTo(valuePos);
+        nvg::StrokeColor(Setting_General_MarkerColor);
+        nvg::StrokeWidth(2.0);
+        nvg::Stroke();
+        nvg::ClosePath();
+    }
+    
 
     // Draw "Yaw" in the center
     nvg::BeginPath();
