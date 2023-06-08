@@ -1,4 +1,9 @@
+
+
 void Render() {
+
+    GetViewingPlayer();
+
     CTrackMania@ app = cast<CTrackMania>(GetApp());
     if (app !is null) {
         auto playground = cast<CSmArenaClient>(app.CurrentPlayground);
@@ -10,7 +15,17 @@ void Render() {
                 AimYaw();
                 AimPitch();
                 AimRoll();
+                
+                if (Show_All_CSmScriptPlayer_Info) {
+                    Leftover();
+                }
             }
         }
     }
 }
+
+void GetViewingPlayer() {
+    
+}
+
+
